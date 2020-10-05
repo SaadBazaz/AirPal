@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TransitDialog</class>
+ <widget class="QDialog" name="TransitDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>411</width>
+    <height>273</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TransitDialog</string>
+  </property>
+  <widget class="QCheckBox" name="directFlight">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>40</y>
+     <width>81</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Direct Flight</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="connectingFlight">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>40</y>
+     <width>111</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Connecting Flights</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="transit">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>40</y>
+     <width>91</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Any Transit</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Islamabad</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Newyork</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Paris</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tokyo</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>London</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Singapore</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Hongkong</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Berlin</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Seoul</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Amsterdam</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QSlider" name="transitTimeSlider">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>80</y>
+     <width>160</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedControls">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>110</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>110</y>
+     <width>21</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>100</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>110</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Time Start</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="saveChangesButton">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>220</y>
+     <width>91</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save Changes</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>180</y>
+     <width>71</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Time End</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="transitTimeSlider_2">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>150</y>
+     <width>160</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedControls">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>180</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>180</y>
+     <width>21</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>100</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>connectingFlight</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>transit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>195</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>directFlight</sender>
+   <signal>clicked()</signal>
+   <receiver>TransitDialog</receiver>
+   <slot>toggleParams_DIRECT()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>64</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>connectingFlight</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>TransitDialog</receiver>
+   <slot>toggleParams_INDIRECT()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>195</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>64</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveChangesButton</sender>
+   <signal>clicked()</signal>
+   <receiver>TransitDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>transit</sender>
+   <signal>activated(QString)</signal>
+   <receiver>TransitDialog</receiver>
+   <slot>toggleParams_TRANSIT()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>315</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>136</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>toggleParams_DIRECT()</slot>
+  <slot>toggleParams_INDIRECT()</slot>
+  <slot>toggleParams_TRANSIT()</slot>
+ </slots>
+</ui>

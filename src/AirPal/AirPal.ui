@@ -394,6 +394,19 @@
       </rect>
      </property>
     </widget>
+    <widget class="QLabel" name="filterWarning">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>500</y>
+       <width>161</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
    <widget class="QListWidget" name="bookingsList">
     <property name="geometry">
@@ -739,7 +752,7 @@
    <sender>searchQuery_2</sender>
    <signal>textChanged(QString)</signal>
    <receiver>AirPalClass</receiver>
-   <slot>analyzeText2()</slot>
+   <slot>analyzeText1()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>315</x>
@@ -763,5 +776,7 @@
   <slot>openAction_Documentation()</slot>
   <slot>analyzeText1()</slot>
   <slot>analyzeText2()</slot>
+  <slot>changeTransitParams_DIRECT()</slot>
+  <slot>changeTransitParams_INDIRECT()</slot>
  </slots>
 </ui>

@@ -46,6 +46,9 @@
     <ClCompile Include="MyQuery.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TransitDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AirPal.h">
@@ -63,6 +66,9 @@
     <QtMoc Include="MyQuery.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="TransitDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="AirPal.ui">
@@ -75,6 +81,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="MyQuery.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="TransitDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -3,21 +3,21 @@
 #include <QtWidgets/QMainWindow>
 #include <QFileDialog>
 #include <QCompleter>
+//#include <QDebug>
 
 #include "ui_AirPal.h"
-
 
 #include "Queue.h"
 #include "MyTicket.h"
 #include "MyQuery.h"
+#include "TransitDialog.h"
 #include "QueryEngine.h"
 #include "OpenProfile.h"
 
 enum PRIORITIES {
-	ALL_P = 0,
-	FLIGHT_COST = 1,
-	FLIGHT_TIME = 2,
-	BOTH_P = 3
+	OPTION1 = 1,
+	OPTION2 = 2,
+	BOTH = 3
 };
 
 class AirPal : public QMainWindow
@@ -46,16 +46,9 @@ public:
 	//store the current page number
 	int pageNumber;
 
-	//vector of current Query Results
-	Vector<CityNode*> currentQueryResults;
-	
-	//query params
-	string source;
-	string destination;
-	int budget;
-	Date preferredDate;
-	string airline;
-	int priority;
+	//data variables for transit dialog
+	int param_directOrIndirect;
+	string transitLocation;
 
 	//current MyQuery
 	Booking MyCurrentQuery;
@@ -66,40 +59,39 @@ private:
 	Ui::AirPalClass ui;
 
 private slots:
-	void openFileWorker();
-	void saveFileWorker(string theFile);
 	void on_searchButton_clicked();
+	void on_addTransitsbutton_clicked();
 	void analyzeText1();
-	void analyzeText2();
 
 public slots:
 	
-	void processQuery();
-	void refreshsearchResultsList();
-	void populateSearchList();
+	void refreshsearchResultsList();								// clears the search list
+	void populateSearchList(Vector<CityNode*>);						// fills the search list
+
 	void refreshpageSubtitle();
 
 	void nextPage();
 
-
 	//refresh all data on the window incase of a file load
 	void refreshMainWindow();
-
 	void refreshUserProfile();
 
+	//Open/Save functionality
 	void openFile();
 	void triggerIsChanged();
 
 	void saveFile();
 	void saveAsFile();
 
-	void openThisQuery();
-	void buyThisTicket();
-
 	void openAction_Documentation();
 
+
+	//Query Interactions
+	void openThisQuery();
+	void buyThisTicket(int *);
 
 	void openThisTicket();
 	void cancelThisTicket(int index);
 	void refreshBookings();
+
 };

@@ -95,6 +95,7 @@
     <ClCompile Include="MyTicket.cpp" />
     <ClCompile Include="OpenProfile.cpp" />
     <ClCompile Include="Query.cpp" />
+    <ClCompile Include="TransitDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AirPal.h" />
@@ -104,6 +105,7 @@
     <QtUic Include="MyQuery.ui" />
     <QtUic Include="MyTicket.ui" />
     <QtUic Include="OpenProfile.ui" />
+    <QtUic Include="TransitDialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AirPal.qrc" />
@@ -123,6 +125,7 @@
     <ClInclude Include="QueryEngine.h" />
     <ClInclude Include="Queue.h" />
     <ClInclude Include="Stack.h" />
+    <QtMoc Include="TransitDialog.h" />
     <ClInclude Include="Trie.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Word.h" />

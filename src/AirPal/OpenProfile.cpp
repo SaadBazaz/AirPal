@@ -3,9 +3,9 @@
 OpenProfile::OpenProfile(QWidget *parent)
 	: QDialog(parent)
 {
-	setupUi(this);
-	string text = loadREADME();
-	this->readMeText->setText(QString::fromStdString(text));
+	//setupUi(this);
+	//string text = loadREADME();
+	//ui->readMeText->setText(QString::fromStdString(text));
 }
 
 

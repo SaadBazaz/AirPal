@@ -1,130 +1,18 @@
 #include "AirPal.h"
 
+
 void AirPal::on_searchButton_clicked()
 {
-	string theQuery = ui.searchQuery->text().toStdString();
-	string theQuery_2 = ui.searchQuery_2->text().toStdString();
-	if (theQuery == "Source" || theQuery == "" || theQuery_2 == "Destination" || theQuery_2 == "")
-		return;
-	this->source = theQuery;
-	this->destination = theQuery_2;
-	processQuery();
-}
+	string source = ui.searchQuery->text().toStdString();
+	string destination = ui.searchQuery_2->text().toStdString();
 
-
-
-void AirPal::analyzeText1() {
-	if (ui.searchQuery->text().toStdString() == "")
+	//IF they are just the default values, or null, return empty (ignore)
+	if (source == "Source" || source == "" || destination == "Destination" || destination == "")
 		return;
 
-	string theText=	ui.searchQuery->text().toStdString();
-	for (int i = 0; i < theText.size(); i++) {
-		if (theText[i] >= 'A' && theText[i] <= 'Z')
-			theText[i] += 32;
-	}
-	QStringList wordList;
-
-	//if (ui.searchQuery->text().size() > 3) {
 
 
-		Vector <string> filteredWords;
-		try {
-			filteredWords = AirSearch.dictionary.CompleteString(theText);
-			for (int i = 0; i < filteredWords.Size(); i++) {
-				filteredWords[i][0] -= 32;
-				wordList << QString::fromStdString(filteredWords[i]);
-			}
-
-		}
-		catch (...) {
-			int maxEdit = 1;
-			Vector <string> checkedWords;
-			do {
-				checkedWords = AirSearch.dictionary.SpellChecker(theText, maxEdit++);
-				for (int i = 0; i < checkedWords.Size(); i++) {
-					checkedWords[i][0] -= 32;
-					wordList << QString::fromStdString(checkedWords[i]);
-				}
-			} while (checkedWords.isEmpty() && maxEdit<=3);
-
-				//don't do anything if no matches found
-			if (checkedWords.isEmpty())
-				wordList << "Couldn't find!";
-		}
-
-
-
-
-	//}
-		
-
-	completer = new QCompleter(wordList, this);
-	//completer->complete();
-	completer->setCaseSensitivity(Qt::CaseInsensitive);
-	completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-	ui.searchQuery->setCompleter(completer);
-	ui.searchQuery->completer()->complete();
-}
-
-
-void AirPal::analyzeText2() {
-	if (ui.searchQuery->text().toStdString() == "")
-		return;
-
-	string theText = ui.searchQuery_2->text().toStdString();
-	for (int i = 0; i < theText.size(); i++) {
-		if (theText[i] >= 'A' && theText[i] <= 'Z')
-			theText[i] += 32;
-	}
-	QStringList wordList;
-
-	//if (ui.searchQuery->text().size() > 3) {
-
-
-	Vector <string> filteredWords;
-	try {
-		filteredWords = AirSearch.dictionary.CompleteString(theText);
-		for (int i = 0; i < filteredWords.Size(); i++) {
-			filteredWords[i][0] -= 32;
-			wordList << QString::fromStdString(filteredWords[i]);
-		}
-
-	}
-	catch (...) {
-		int maxEdit = 1;
-		Vector <string> checkedWords;
-		do {
-			checkedWords = AirSearch.dictionary.SpellChecker(theText, maxEdit++);
-			for (int i = 0; i < checkedWords.Size(); i++) {
-				checkedWords[i][0] -= 32;
-				wordList << QString::fromStdString(checkedWords[i]);
-			}
-		} while (checkedWords.isEmpty() && maxEdit <= 3);
-
-		//don't do anything if no matches found
-		if (checkedWords.isEmpty())
-			wordList << "Couldn't find!";
-	}
-
-
-
-
-	//}
-
-
-	completer = new QCompleter(wordList, this);
-	//completer->complete();
-	completer->setCaseSensitivity(Qt::CaseInsensitive);
-	completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-	ui.searchQuery_2->setCompleter(completer);
-	ui.searchQuery_2->completer()->complete();
-}
-
-
-void AirPal::processQuery() {
-	//if empty...
-
-	//else...
+	//ELSE process the other query inputs
 
 	this->pageNumber = 0;
 
@@ -133,28 +21,81 @@ void AirPal::processQuery() {
 		effectiveness = 1;
 
 
-	string transitLocation = "";
 	double costRange = this->ui.costBox->value();
-	int directOrIndirect = 2;
 
 	Date dateRange(ui.dateEdit->date().day(), ui.dateEdit->date().month(), ui.dateEdit->date().year());
 
-	string airline=ui.airlineSelect->currentText().toStdString();
-	int transitTimeStart = 0;
-	int transitTimeEnd = 0;
+	string airline = ui.airlineSelect->currentText().toStdString();
+	int transitTimeStart = 0;	//hardcoded
+	int transitTimeEnd = 0;		//hardcoded
 
-	currentQueryResults = AirSearch.processSentence(this->source, this->destination, effectiveness, transitLocation, costRange, directOrIndirect, dateRange,airline,transitTimeStart, transitTimeEnd);
+	string anyChanges = "";
 
-	//if (this->ui.costBox->value()) {
-	//	currentQueryResults = AirSearch.
-	//}
+	int param_directOrIndirect = 0;
+	if (directbool == 1) {
+		param_directOrIndirect = OPTION1;
+	}
+	if (indirectbool == 1) {
+		if (param_directOrIndirect == 1) {
+			param_directOrIndirect = BOTH;
+		}
+		else {
+			param_directOrIndirect = OPTION2;
+		}
+	}
 
+
+
+	//Empty the state of the searchResultsList
 	refreshsearchResultsList();
-	populateSearchList();
+
+	//Get the data from "getFlights" API and update the searchList with "populateSearchList" function
+	populateSearchList(AirSearch.getFlightsSummary(source, destination, effectiveness, transitSelection, costRange, param_directOrIndirect, dateRange, airline, transitTimeStart, transitTimeEnd, anyChanges));
 }
 
+void AirPal::on_addTransitsbutton_clicked() {
 
-void AirPal::populateSearchList() {
+	TransitDialog dialog(this);
+	int dialogCode = dialog.exec();
+	//if (dialogCode == dialog.Accepted) {
+	//	dialog.toggleParams_DIRECT();
+	//	dialog.toggleParams_INDIRECT();
+	//	dialog.toggleParams_TRANSIT();
+	//	param_directOrIndirect = 0;
+	//	if (directbool==1) {
+	//		param_directOrIndirect = OPTION1;
+	//	}
+	//	if (indirectbool==1) {
+	//		if (param_directOrIndirect == 1) {
+	//			param_directOrIndirect = BOTH;
+	//		}
+	//		else {
+	//			param_directOrIndirect = OPTION2;
+	//		}
+	//	}
+	//	//qDebug() << "Transit: " << transitSelection;
+	//	////qDebug() << "Types: " << QString("String") << QChar('x') << QRect(0, 10, 50, 40);
+	//	//qDebug() << "Direct or Connecting? " << param_directOrIndirect;
+	//	transitLocation =  transitSelection;
+	//}
+}
+
+void AirPal::analyzeText1() {
+	QLineEdit* theInputFieldSender = qobject_cast<QLineEdit*>(sender()); // retrieve the Text Input which called this function
+
+	//If the text field is null, just send it back lol don't waste my time
+	if (theInputFieldSender->text().toStdString() == "")
+		return;
+
+	//Get the search suggestions then throw them in a new Completer, and attach the Completer to the Text Input
+	completer = new QCompleter(AirSearch.getSearchSuggestions(theInputFieldSender->text().toStdString()), this);
+	completer->setCaseSensitivity(Qt::CaseInsensitive);
+	completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+	theInputFieldSender->setCompleter(completer);
+	theInputFieldSender->completer()->complete();
+}
+
+void AirPal::populateSearchList(Vector<CityNode*> currentQueryResults) {
 	if (currentQueryResults.isEmpty()) {
 		ui.searchResultsList->addItem(QString::fromStdString("Couldn't find anything related to this query.\nPlease change your search terms or try again later."));
 	}
@@ -194,7 +135,7 @@ void AirPal::populateSearchList() {
 			}
 		}
 		catch (...) {
-			ui.searchResultsList->addItem(QString::fromStdString("Couldn't find anything related to '" + this->source + "'.\nPlease change your search terms or try again later."));
+			ui.searchResultsList->addItem(QString::fromStdString("Couldn't find anything related to that.\nPlease change your search terms or try again later."));
 		}
 	}
 }
@@ -212,100 +153,30 @@ void AirPal::openFile() {
 		QString fileName = QFileDialog::getOpenFileName(this,
 			tr("Open User Terminal"), "",
 			tr("AirPal User Profile (*.apl);;All Files (*)"));
-		//ui.myBookingsSubtitle->setText(fileName);
 
 		//fileName contains the path of the file to be accessed. Use it to load the User
 		//into the application
 		if (fileName == "")
 			return;
 		loadedFile = fileName.toStdString();
-		openFileWorker();
+		myBookings = QueryEngine::getUserBookings(loadedFile);
 		refreshMainWindow();
 
-}
-
-void AirPal::openFileWorker() {
-	
-	myBookings.clear();
-	
-	ifstream ifs(loadedFile);
-	
-	Ticket tempTicket;
-
-	while (!ifs.eof()) {
-		Booking thisBooking;
-		getline(ifs, thisBooking.ID, ':');
-		char c = '&';
-		while (c != '\n' && !ifs.eof()){
-			Ticket thisTicket;
-		
-			getline(ifs, thisTicket.src, ',');
-			getline(ifs, thisTicket.dest, ',');
-		
-			string tempPrice = "";
-			getline(ifs, tempPrice, ',');
-			thisTicket.price = stod(tempPrice);
-
-			getline(ifs, thisTicket.startTime, ',');
-			getline(ifs, thisTicket.endTime, ',');
-		
-			string theDate;
-			getline(ifs, theDate, ',');
-			thisTicket.date = theDate;
-		
-			getline(ifs, thisTicket.airline, ',');
-
-			thisBooking.tickets.enqueue(thisTicket);
-			if (!ifs.eof())
-				c = ifs.get();
-		}
-		this->myBookings.enqueue(thisBooking);
-	}
-	ifs.close();
-}
-
-void AirPal::saveFileWorker(string theFile) {
-	ofstream ofs(theFile);
-
-	for (int i = 0; i < myBookings.Size(); i++) {
-
-		ofs << myBookings[i].ID << ":";
-		for (int j = 0; j < myBookings[i].tickets.Size(); j++) {
-			ofs << myBookings[i].tickets[j].src << ","
-				<< myBookings[i].tickets[j].dest << ","
-				<< myBookings[i].tickets[j].price << ","
-				<< myBookings[i].tickets[j].startTime << ","
-				<< myBookings[i].tickets[j].endTime << ","
-				<< myBookings[i].tickets[j].date.getStringDate() << ","
-				<< myBookings[i].tickets[j].airline << ",";
-			if (j != myBookings[i].tickets.Size() - 1) {
-				ofs << "&";
-			}
-		}
-		if (i != myBookings.Size() - 1) {
-			ofs << endl;
-		}
-	}
-	ofs.close();
-
-	isChanged = false;
 }
 
 void AirPal::saveFile() {
 	if (loadedFile == "")
 		saveAsFile();
 	else
-		saveFileWorker(loadedFile);
+		if (QueryEngine::saveUserBookings(loadedFile, myBookings))
+			isChanged = false;
 	refreshMainWindow();
 }
-
-
 
 void AirPal::saveAsFile() {
 	QString fileName = QFileDialog::getSaveFileName(this,
 		tr("Save User Terminal"), "",
 		tr("AirPal User Profile (*.apl);;All Files (*)"));
-	//ui.myBookingsSubtitle->setText(fileName);
 
 	//fileName contains the path of the file to be accessed. Use it to load the User
 	//into the application
@@ -313,49 +184,25 @@ void AirPal::saveAsFile() {
 		return;
 
 	loadedFile = fileName.toStdString();
-	saveFileWorker(loadedFile);
+	QueryEngine::saveUserBookings(loadedFile, myBookings);
 	refreshMainWindow();
 
 }
 
 // -------------------- Query dialog functionality
 void AirPal::openThisQuery() {
-	
-	MyCurrentQuery.tickets.clear();
-	CityNode* cursor = currentQueryResults[ui.searchResultsList->currentRow()];
+	// Let's assume we get the primary keys of all the Flights in this Booking from the row,
+	int flightIDs[5] = { 1,2,3,4,5 };
 
-	string Source;
-
-
-	//Extract first ticket, because it's a little special
-	if (cursor != nullptr) {
-		Source = cursor->CityName;
-		cursor = cursor->next;
-		if (cursor != nullptr) {
-			Ticket currentTicket(Source, cursor->CityName, cursor->Ticket_price, cursor->Flying_time, cursor->Landing_time, cursor->Date_of_travel, cursor->Name_of_airline);
-			MyCurrentQuery.tickets.enqueue(currentTicket);
-			Source = cursor->CityName;
-			cursor = cursor->next;
-		}	
-	}
-	while (cursor)
-	{
-		Ticket currentTicket(Source,cursor->CityName, cursor->Ticket_price, cursor->Flying_time, cursor->Landing_time, cursor->Date_of_travel, cursor->Name_of_airline);
-		MyCurrentQuery.tickets.enqueue(currentTicket);
-		Source = cursor->CityName;
-		cursor = cursor->next;
-	}
-	
-	MyQuery dialog(this->MyCurrentQuery, this);
+	MyQuery dialog(flightIDs, this);
 	int dialogCode = dialog.exec();
 	if (dialogCode == dialog.Accepted) {
-		buyThisTicket();
+		buyThisTicket(flightIDs);
 	}
 }
 
-void AirPal::buyThisTicket() {
-	MyCurrentQuery.setNewID();
-	myBookings.enqueue(MyCurrentQuery);
+void AirPal::buyThisTicket(int * flightIDs) {
+	myBookings.enqueue(QueryEngine::postBuyTicket(flightIDs));
 	triggerIsChanged();
 	refreshBookings();
 }
@@ -373,7 +220,6 @@ void AirPal::openThisTicket() {
 }
 
 void AirPal::openAction_Documentation() {
-
 	OpenProfile dialog(this);
 	dialog.exec();
 }
@@ -417,22 +263,16 @@ void AirPal::refreshUserProfile() {
 void AirPal::refreshsearchResultsList() {
 	this->ui.searchResultsList->clear();
 	refreshpageSubtitle();
-	if (this->currentQueryResults.Size() < 20)//hardcoding 20 as page_length
-		ui.nextButton->setDisabled(1);
-	else
-		ui.nextButton->setDisabled(0);
 }
 
 void AirPal::refreshpageSubtitle() {
 	int offset = pageNumber * 20; //pageLength is constant 20 for now
-	ui.searchResultsSubtitle->setText(QString::fromStdString("Displaying " + to_string(offset) + " to " + to_string(this->currentQueryResults.Size())));
 }
 
 void AirPal::refreshBookings() {
 	this->ui.bookingsList->clear();
 	for (int i = 0; i < myBookings.Size(); i++) {
 		ui.bookingsList->addItem(QString::fromStdString(AirSearch.dictionary.getAbbreviation(myBookings[i].tickets.begin()->src) + " to " + AirSearch.dictionary.getAbbreviation(myBookings[i].tickets.end()->dest) + ", " + myBookings[i].tickets.begin()->date.getStringDate()));
-		//ui.bookingsList->addItem(QString::fromStdString(myBookings[i].tickets.begin()->src + " to " + myBookings[i].tickets.end()->dest + ", " + myBookings[i].tickets.begin()->date.getStringDate()));
 	}
 	
 	string subtitle = "You have ";
@@ -451,20 +291,9 @@ AirPal::AirPal(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	//Load existing bookings here
-	
-	this->source = "";
-	this->destination = "";
 	this->pageNumber = 0;
-	//myBookings.enqueue(booking2);
 
-
-	// initialize dictionary here
-	//searchIndex.CreateDictionary();
-
-
-	//train ML model here
-	//.....
+	this->param_directOrIndirect = BOTH;
 	
 	completer = nullptr;
 

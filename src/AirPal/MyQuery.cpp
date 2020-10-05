@@ -1,15 +1,19 @@
 #include "MyQuery.h"
-
+#include "QueryEngine.h"
 MyQuery::MyQuery(QWidget *parent)
 	: QDialog(parent)
 {
 	setupUi(this);
 }
 
-MyQuery::MyQuery(Booking thisBooking, QWidget *parent)
+MyQuery::MyQuery(int * flightIDs, QWidget *parent)
 	: QDialog(parent)
 {
 	setupUi(this);
+
+	// then we assume that getFlightDetails (int * flightIDs) returns all the info in the flights of that Booking
+	auto thisBooking = QueryEngine::getFlightDetails(flightIDs);
+
 
 	try {
 		CITY1->setText(QString::fromStdString(thisBooking.tickets.begin()->src));
@@ -25,12 +29,26 @@ MyQuery::MyQuery(Booking thisBooking, QWidget *parent)
 		CITY2->setText("UNDEFINED");
 	}
 
+	try {
+		PRICE->setText(QString::fromStdString("Total Price (with stay): " + to_string(thisBooking.totalprice)));
+	}
+	catch (...) {
+		PRICE->setText("UNDEFINED");
+	}
+
+	try {
+		HOTELSTAYS->setText("");
+	}
+	catch (...) {
+		HOTELSTAYS->setText("UNDEFINED");
+	}
+
 	//TICKETID->setText(QString::fromStdString("ID#" + thisBooking.ID));
 
 	try {
 		string transits = "";
 		string airlines = thisBooking.tickets[0].airline;
-		string startTimestoEndTimes = "";
+		string startTimestoEndTimes = thisBooking.tickets[0].startTime + " to " + thisBooking.tickets[0].endTime + ", ";
 		airlines += '\n';
 		for (int i = 1; i < thisBooking.tickets.Size(); i++) {
 			transits += thisBooking.tickets[i].src;

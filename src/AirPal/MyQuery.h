@@ -10,6 +10,6 @@ class MyQuery : public QDialog, public Ui::MyQuery
 
 public:
 	MyQuery(QWidget *parent = Q_NULLPTR);
-	MyQuery(Booking thisBooking, QWidget *parent = Q_NULLPTR);
+	MyQuery(int * flightIDs, QWidget *parent = Q_NULLPTR);
 	~MyQuery();
 };
